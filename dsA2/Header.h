@@ -25,4 +25,4 @@ typedef struct WordNode
 } WordNode;
 
 
-unsigned long hash(char* str);
+unsigned long hash(char* str);  // Hashing function
