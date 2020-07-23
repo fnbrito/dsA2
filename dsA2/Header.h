@@ -1,3 +1,9 @@
+/*
+ *  FILE            : Header.h
+ *  PROJECT         : SENG1050 - Assignment #2
+ *  PROGRAMMER      : Filipe Brito
+ *  FIRST VERSION   : 2020-07-18
+ */
 #pragma once
 
 #include <stdio.h>
@@ -20,5 +26,3 @@ typedef struct WordNode
 
 
 unsigned long hash(char* str);
-
-void getInput(std::string& buffer);

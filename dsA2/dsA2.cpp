@@ -1,35 +1,46 @@
+/*
+ *  FILE            : dsA2.cpp
+ *  PROJECT         : SENG1050 - Assignment #2
+ *  PROGRAMMER      : Filipe Brito
+ *  FIRST VERSION   : 2020-07-18
+ *  DESCRIPTION     :
+ *		This program demonstrates the difference in number of
+ *		comparisons between searching in a long singly-linked
+ *		list versus a hash table list.
+ */
 #include "header.h"
-#include "linkedList.h"
-#include <iostream>
+#include "LinkedList.h"
 #include <fstream>
 
-
-void newBuckets(linkedList** list);
-void deleteBucketArray(linkedList** lists);
+void getInput(std::string& buffer);
+void newBuckets(LinkedList** list);
+void deleteBucketArray(LinkedList** lists);
 
 int main(void)
 {
-	linkedList* bucketList[TABLE_SIZE] = { new linkedList() };
-	linkedList* longList = new linkedList();
-	newBuckets(bucketList);
+	// Initialization of variables
+	LinkedList* bucketList[TABLE_SIZE] = { new LinkedList() };
+	newBuckets(bucketList);		// calls newBuckets to initialize the array of objects LinkedList
+	LinkedList* longList = new LinkedList();  // creates the object that stores the long list.
 	std::string buffer = "";
-	int bucketNumber = 0;
+	int bucketNumber = 0;	// int to store the hash calculation
 	int numberOfComparisons[2] = { 1, 2 };
 
 	std::ifstream inFile;
-	inFile.open("words.txt",std::ios::in);
-	if (!inFile)
+	inFile.open("words.txt",std::ios::in);		// tries to open the words.txt file
+	if (!inFile)		// checks if file opened successfully
 	{
-		std::cerr << "Impossible to open file words.txt";
+		printf("Impossible to open file words.txt");
 		return FAILURE;
 	}
 
-	while (inFile.peek() != EOF)
+	while (inFile.peek() != EOF)			// as long as End-of-file was not reached
 	{
-		std::getline(inFile, buffer);
-		bucketNumber = hash((char*)buffer.c_str()) % TABLE_SIZE;
-		bucketList[bucketNumber]->CreateNode(buffer);
-		longList->CreateNode(buffer);
+		std::getline(inFile, buffer);									// gets word from words.txt
+		bucketNumber = hash((char*)buffer.c_str()) % TABLE_SIZE;		// calculates the hash value
+		longList->CreateNode(buffer);									// inserts in the single long list
+		bucketList[bucketNumber]->CreateNode(buffer);					// inserts in the hash table
+
 	}
 
 
@@ -39,16 +50,15 @@ int main(void)
 		getInput(buffer);
 		if (buffer != ".")
 		{
-		bucketNumber = hash((char*)buffer.c_str()) % TABLE_SIZE;
-		longList->SearchForTwice(buffer, longList, bucketList, numberOfComparisons);
+		longList->SearchForTwice(buffer, longList, bucketList, numberOfComparisons);		// searches in the long list and in the hashing table
 		}
 	}
 
 
 
-	inFile.close();
-	deleteBucketArray(bucketList);
-	delete longList;
+	inFile.close();						//closes the file
+	deleteBucketArray(bucketList);		//deallocates
+	delete longList;					//deallocates
 
 	return SUCCESS;
 }
@@ -62,15 +72,15 @@ void getInput(std::string& buffer)
 	buffer = temp;
 }
 
-void newBuckets(linkedList** list)
+void newBuckets(LinkedList** list)
 {
 	for (int i = 0; i < TABLE_SIZE; i++)
 	{
-		list[i] = new linkedList();
+		list[i] = new LinkedList();
 	}
 }
 
-void deleteBucketArray(linkedList** lists)
+void deleteBucketArray(LinkedList** lists)
 {
 	for (int i = 0; i < TABLE_SIZE; i++)
 	{
